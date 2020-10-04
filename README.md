@@ -87,3 +87,34 @@ docker build -t counter-image -f Dockerfile .
 ```
 
 Docker will start going through every line in the Dockerfile. The . in the docker build command tells Docker to use the current folder to find the Dockerfile. This command builds the image and creates a local repository named `counter-image` that points to that image. After the command finishes, run `docker images` to view the list of docker images installed. 
+
+![](./screenshots/docker-images.png)
+
+It does display all images in my pc, including the docker tutorial one. 
+
+You might also have noticed that some of them share the same `IMAGE ID`. This is because one is based on the other. 
+
+Add a few more commands to the *Dockerfile*. 
+
+```bash
+COPY bin/Release/netcoreapp3.1/publish/ App/
+WORKDIR /App
+ENTRYPOINT ["dotnet", "NetCore.Docker.dll"] 
+```
+
+Let us take a look at the lines in the snippet above.
+
+COPY command, copies a source to the destination in the container. Here it copies the `publish` folder to the `App` folder in the container. 
+
+The `WORKDIR` changes the current directory inside the container to `App`. This is the `cd` equivalent for docker to perform in the container. 
+
+`ENTRYPOINT` tells Docker to configure the container to run as an executable. The command specified as arguments to the `ENTRYPOINT` will be executed. When this finishes execution, the container would automatically stop. 
+
+Now run the build command again. 
+
+![](./screenshots/docker-cp-cd-entry.png)
+
+Each command in the *Dockerfile* created a layer and created an __IMAGE ID__
+
+![](./screenshots/new-docker-image.png)
+
