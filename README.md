@@ -1,5 +1,7 @@
 # How to containerize a .NET Core APP
 
+This is just a repository I created by following instructions from [Microsoft docs online](https://docs.microsoft.com/en-us/dotnet/core/docker/build-container?tabs=linux). I followed along and took notes and tried out the commands in order avoid distractions. That's what resulted in this. You can follow along using the main docs and do not have to read this README.
+
  - Create and publish a .NET Core app
  - Create and configure a Dockerfile for .NET Core
  - Build a Docker image
@@ -188,4 +190,25 @@ docker run -it --rm counter-image
 Looks mysterious! `-it` is a cool way of telling docker that there is more to do. Docker runs and attaches itself to the container then deletes the container when an interrupt (`Ctrl+C`) signal is encountered!
 
 ![](./screenshots/docker-run-delete-ps.png)
+
+## Change ENTRYPOINT
+
+`docker run` command allows you to provide a custom __ENDPOINT__, one that's different from what is listed in the _Dockerfile_ but only for the instance of the container you are starting with this command.
+
+```bash
+docker run -it --rm --entrypoint "bash" counter-image
+```
+
+![](./screenshots/docker-run-custom-entrypoint.png)
+
+## Remove Image
+
+`rmi` command allows deletion of images using **IMAGE ID** or the **REPOSITORY:TAG** format
+
+```bash
+docker rmi counter-image:latest
+docker rmi mcr.microsoft.com/dotnet/core/aspnet:3.1
+```
+
+![](./screenshots/docker-rmi-images.png)
 
