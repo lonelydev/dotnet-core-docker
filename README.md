@@ -57,7 +57,7 @@ namespace NetCore.Docker
 Save and close and run `dotnet run` again. 
 You'll notice that the app now prints a counter and keeps incrementing the counter until you forcefully stop the application using `Ctrl+C`. 
 
-# Publish the app
+## Publish the app
 
 Unlike regular dotnet, dotnet core requires you to [publish](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish) your app. This will create a folder with the application and dependencies code, making it ready for deploying to a target host.
 
@@ -67,7 +67,7 @@ dotnet publish -c Release
 
 The command published the app in Release mode to `.\App\bin\Release\netcoreapp3.1\publish`
 
-# Create Dockerfile
+## Create Dockerfile
 This is the file that docker uses when executing the `docker build` command. This is a text file with no extension. 
 
 Create a file named `Dockerfile` in the application directory, the one containing the `csproj` file. And add the following to it.
@@ -117,4 +117,75 @@ Now run the build command again.
 Each command in the *Dockerfile* created a layer and created an __IMAGE ID__
 
 ![](./screenshots/new-docker-image.png)
+
+## Create Container
+
+```bash
+docker create --name core-counter counter-image
+```
+
+In the above command __core-counter__ is the name of the container. __counter-image__ is the image that we created earlier. 
+
+Now that I have created the container, I can view all of them from the local docker registry using:
+
+```bash
+docker ps -a
+```
+
+![](./screenshots/docker-container-create-ps.png)
+
+## Manage the container
+
+We now have the container ready for us to use and manage. In fact, if you ran the commands I listed earlier, you already have it running. 
+
+### Start Container
+
+```bash
+docker start core-counter
+```
+![](./screenshots/docker-start-core-counter.png)
+
+### Stop Container
+
+```bash
+docker stop core-counter
+```
+![](./screenshots/docker-stop-core-counter.png)
+
+### Connect to a container
+
+Most often you don't just want to start a container but also see what the container is doing, its output etc. 
+
+Let us start the core-counter and then connect to it.
+
+![](./screenshots/docker-attach-core-counter.png)
+
+The `--sig-proxy=false` command line parameter ensures that `Ctrl+C` will not stop the process in the container. It is basically telling docker to stop sending signals to the process inside the container. 
+
+### Delete a container
+
+```bash
+docker stop core-counter
+
+docker ps -a
+
+docker rm core-counter
+```
+
+![](./screenshots/docker-stop-delete-core-counter.png)
+
+
+## One command to create and run
+
+Earlier we created a container then started it separately. There is another way to create and run a container, using one command alone. 
+
+You could also do more! 
+
+```bash
+docker run -it --rm counter-image
+```
+
+Looks mysterious! `-it` is a cool way of telling docker that there is more to do. Docker runs and attaches itself to the container then deletes the container when an interrupt (`Ctrl+C`) signal is encountered!
+
+![](./screenshots/docker-run-delete-ps.png)
 
